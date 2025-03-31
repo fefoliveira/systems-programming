@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Depurar com LLDB",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/seu_executavel",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Compilar"
+        }
+    ]
+}
