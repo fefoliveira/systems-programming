@@ -1,3 +1,5 @@
+11 0       # r mem[0]           ; lê um valor para mem[0]
+11 1       # r mem[1]           ; lê um valor para mem[1]
 4 2 0      # mv a2, mem[0]      ; carrega val1 (10) da memória para o registrador a2
 4 3 1      # mv a3, mem[1]      ; carrega val2 (20) da memória para o registrador a3
 0 0 2 3    # add a0, a2, a3     ; a0 = a2 + a3 → soma os valores (10 + 20)

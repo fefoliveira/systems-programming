@@ -82,7 +82,7 @@ static void io(Instruction instr)
 {
 	switch (instr.opcode) {
 	case W:
-		printf("Output: %d\n", data_memory[instr.op1]);
+		printf("\nOutput: %d\n", data_memory[instr.op1]);
 		break;
 	case R:
 		printf("Input (mem[%d]): ", instr.op1);

@@ -14,10 +14,10 @@ void init_memory()
 
 void print_instruction_memory()
 {
-	printf("Conteúdop da memória de instruções:\n");
+	printf("Conteúdo da memória de instruções:\n");
 	for (int i = 0; i < MEMORY_SIZE; i++) {
 		if (instruction_memory[i].opcode != -1) {
-			printf("Address %d: Opcode %d, Op1 %d, Op2 %d, Op3 %d\n",
+			printf("instruction_memory[%d]: Opcode %d, Op1 %d, Op2 %d, Op3 %d\n",
 			       i, instruction_memory[i].opcode,
 			       instruction_memory[i].op1,
 			       instruction_memory[i].op2,
@@ -32,7 +32,7 @@ void print_data_memory()
 	printf("Conteúdo da memória de dados:\n");
 	for (int i = 0; i < MEMORY_SIZE; i++) {
 		if (data_memory[i] != 0) {
-			printf("Address %d: Value %d\n", i, data_memory[i]);
+			printf("data_memory[%d]: Value %d\n", i, data_memory[i]);
 		}
 	}
 	printf("\n");
