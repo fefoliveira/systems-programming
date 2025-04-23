@@ -1,3 +1,4 @@
+// clang-format off
 #include <stdio.h>
 #include "memory.h"
 
@@ -12,16 +13,42 @@ void init_memory()
 	}
 }
 
+const char *opcode_names[] = {
+    "ADD",
+    "SUB",
+    "MUL",
+    "DIV",
+    "MV",
+    "ST",
+    "JMP",
+    "JEQ",
+    "JGT",
+    "JLT",
+    "W",
+    "R",
+    "STP"
+};
+
 void print_instruction_memory()
 {
-	printf("Conteúdo da memória de instruções:\n");
+	printf("\nConteúdo da memória de instruções:\n");
 	for (int i = 0; i < MEMORY_SIZE; i++) {
 		if (instruction_memory[i].opcode != -1) {
-			printf("instruction_memory[%d]: Opcode %d, Op1 %d, Op2 %d, Op3 %d\n",
-			       i, instruction_memory[i].opcode,
-			       instruction_memory[i].op1,
-			       instruction_memory[i].op2,
-			       instruction_memory[i].op3);
+			const char *opcode_str =
+				(instruction_memory[i].opcode >= 0 &&
+				 instruction_memory[i].opcode < NUM_OPCODES) ?
+					opcode_names[instruction_memory[i].opcode] : "UNKNOWN";
+			printf("instr_mem[%d]: %s", i, opcode_str);
+			if (instruction_memory[i].op1 != -1) {
+				printf(" mem[%d]", instruction_memory[i].op1);
+			}
+			if (instruction_memory[i].op2 != -1) {
+				printf(" mem[%d]", instruction_memory[i].op2);
+			}
+			if (instruction_memory[i].op3 != -1) {
+				printf(" mem[%d]", instruction_memory[i].op3);
+			}
+			printf("\n");
 		}
 	}
 	printf("\n");
@@ -32,7 +59,8 @@ void print_data_memory()
 	printf("Conteúdo da memória de dados:\n");
 	for (int i = 0; i < MEMORY_SIZE; i++) {
 		if (data_memory[i] != 0) {
-			printf("data_memory[%d]: Value %d\n", i, data_memory[i]);
+			printf("data_mem[%d]: %d\n", i,
+			       data_memory[i]);
 		}
 	}
 	printf("\n");
