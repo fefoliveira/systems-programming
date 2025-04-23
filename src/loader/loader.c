@@ -23,17 +23,22 @@ bool load_program(const char *filename)
 		int count = sscanf(buffer, "%d %d %d %d", &opcode, &op1, &op2,
 				   &op3);
 
-		Instruction instr = { NOP, -1, -1, -1 };
+		Instruction instr;
 
-		if (count == 4) {
+		switch (count) {
+		case 4:
 			instr = (Instruction){ opcode, op1, op2, op3 };
-		} else if (count == 3) {
+			break;
+		case 3:
 			instr = (Instruction){ opcode, op1, op2, -1 };
-		} else if (count == 2) {
+			break;
+		case 2:
 			instr = (Instruction){ opcode, op1, -1, -1 };
-		} else if (count == 1) {
+			break;
+		case 1:
 			instr = (Instruction){ opcode, -1, -1, -1 };
-		} else {
+			break;
+		default:
 			fprintf(stderr,
 				"Erro na linha %d: formato inválido: %s",
 				line + 1, buffer);
