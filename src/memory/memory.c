@@ -24,6 +24,7 @@ void print_instruction_memory()
 			       instruction_memory[i].op3);
 		}
 	}
+	printf("\n");
 }
 
 void print_data_memory()
@@ -34,4 +35,5 @@ void print_data_memory()
 			printf("Address %d: Value %d\n", i, data_memory[i]);
 		}
 	}
+	printf("\n");
 }
