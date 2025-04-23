@@ -4,7 +4,7 @@
 BIN = vm
 
 # Fontes
-SRC = src/main.c src/memory/memory.c src/loader/loader.c src/core/core.c
+SRC = src/main.c src/memory/memory.c src/loader/loader.c src/cpu/cpu.c
 
 # Comando para compilar
 $(BIN): $(SRC)

@@ -1,6 +1,6 @@
 #include "memory/memory.h"
 #include "loader/loader.h"
-#include "core/core.h"
+#include "cpu/cpu.h"
 
 int main()
 {
