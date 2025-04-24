@@ -7,7 +7,7 @@ bool load_program(const char *filename)
 	FILE *file = fopen(filename, "r");
 	if (!file) {
 		perror("Erro ao abrir o arquivo");
-		return false;
+		return 1;
 	}
 
 	int opcode, op1, op2, op3;
@@ -43,7 +43,7 @@ bool load_program(const char *filename)
 				"Erro na linha %d: formato inválido: %s",
 				line + 1, buffer);
 			fclose(file);
-			return false;
+			return 1;
 		}
 
 		instruction_memory[i++] = instr;
@@ -51,5 +51,5 @@ bool load_program(const char *filename)
 	}
 
 	fclose(file);
-	return true;
+	return 0;
 }

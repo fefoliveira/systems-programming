@@ -5,7 +5,10 @@
 int main()
 {
 	init_memory();
-	load_program("./programs/program.txt");
+	int err = load_program("./programs/program.txt");
+	if (err) {
+		return 1;
+	}
 
 	print_instruction_memory();
 	// print_data_memory();
