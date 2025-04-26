@@ -31,7 +31,7 @@ Repository with the project developed during the Systems Programming discipline 
 Make sure you're in the project root directory. Then run:
 
 ```bash
-make run
+make run program
 ```
 
 This will:
