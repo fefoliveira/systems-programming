@@ -38,10 +38,10 @@ static void memory(Instruction instr)
 {
 	switch (instr.opcode) {
 	case MV:
-		registers[instr.op1] = data_memory[instr.op2];
+		registers[instr.op1] = memory[DATA_MEMORY_START + instr.op2];
 		break;
 	case ST:
-		data_memory[instr.op2] = registers[instr.op1];
+		memory[DATA_MEMORY_START + instr.op2] = registers[instr.op1];
 		break;
 	default:
 		break;
@@ -82,11 +82,11 @@ static void io(Instruction instr)
 {
 	switch (instr.opcode) {
 	case W:
-		printf("\nOutput: %d\n", data_memory[instr.op1]);
+		printf("\nOutput: %d\n", memory[DATA_MEMORY_START + instr.op1]);
 		break;
 	case R:
 		printf("Input (mem[%d]): ", instr.op1);
-		scanf("%d", &data_memory[instr.op1]);
+		scanf("%d", &memory[DATA_MEMORY_START + instr.op1]);
 		break;
 	default:
 		break;
@@ -96,7 +96,7 @@ static void io(Instruction instr)
 void run_vm()
 {
 	while (1) {
-		Instruction instr = instruction_memory[PC];
+		Instruction instr = memory[PC];
 
 		if (instr.opcode >= ADD && instr.opcode <= DIV) {
 			ula(instr);
@@ -116,5 +116,10 @@ void run_vm()
 		}
 
 		PC++;
+		if (PC > INSTRUCTION_MEMORY_END) {
+			fprintf(stderr,
+				"O PC tentou ler mais palavras do que o limite existente na memória de instruções.");
+			return 1;
+		}
 	}
 }

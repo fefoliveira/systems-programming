@@ -17,7 +17,7 @@ bool load_program(const char *filename)
 
 	while (fgets(buffer, sizeof(buffer), file)) {
 		if (buffer[0] == '#' || buffer[0] == '\n') {
-			continue; // ignora comentários/linhas vazias
+			continue; // Ignora comentários/linhas vazias
 		}
 
 		int count = sscanf(buffer, "%d %d %d %d", &opcode, &op1, &op2,
@@ -46,7 +46,14 @@ bool load_program(const char *filename)
 			return 1;
 		}
 
-		instruction_memory[i++] = instr;
+		if (i <= INSTRUCTION_MEMORY_END) {
+			memory[i++] = instr;
+		} else {
+			fprintf(stderr,
+				"O número de instruções ultrapassou o limite aceito");
+			fclose(file);
+			return 1;
+		}
 		line++;
 	}
 

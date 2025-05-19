@@ -2,14 +2,16 @@
 #include <stdio.h>
 #include "memory.h"
 
-Instruction instruction_memory[MEMORY_SIZE];
-int data_memory[MEMORY_SIZE];
+int[] memory[MEMORY_SIZE];
 
 void init_memory()
 {
 	for (int i = 0; i < MEMORY_SIZE; i++) {
-		instruction_memory[i] = NOP_INSTRUCTION;
-		data_memory[i] = 0;
+		if (i <= INSTRUCTION_MEMORY_END) {
+			memory[i] = NOP_INSTRUCTION;	
+		} else {
+			memory[i] = 0;
+		}
 	}
 }
 
@@ -32,7 +34,7 @@ const char *opcode_names[] = {
 void print_instruction_memory()
 {
 	printf("\nConteúdo da memória de instruções:\n");
-	for (int i = 0; i < MEMORY_SIZE; i++) {
+	for (int i = 0; i <= INSTRUCTION_MEMORY_END; i++) {
 		if (instruction_memory[i].opcode != -1) {
 			const char *opcode_str =
 				(instruction_memory[i].opcode >= 0 &&
@@ -57,7 +59,7 @@ void print_instruction_memory()
 void print_data_memory()
 {
 	printf("Conteúdo da memória de dados:\n");
-	for (int i = 0; i < MEMORY_SIZE; i++) {
+	for (int i = DATA_MEMORY_START; i < MEMORY_SIZE; i++) {
 		if (data_memory[i] != 0) {
 			printf("data_mem[%d]: %d\n", i,
 			       data_memory[i]);
