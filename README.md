@@ -48,7 +48,7 @@ This will:
 
 ## 🛠️ Development Notes
 
-- You can edit `programs/program.txt` to change the program executed
+- You can edit `programs/program.txt` (or any other .txt file related to a program, such as an "add.txt") to change the program executed
 - Each line must follow the opcode format from `isa.h`
 - Memory can be preloaded with values by editing `main.c`
 
