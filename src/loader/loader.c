@@ -47,7 +47,7 @@ bool load_program(const char *filename)
 		}
 
 		if (i <= INSTRUCTION_MEMORY_END) {
-			memory[i++] = instr;
+			memory[i++].instr = instr;
 		} else {
 			fprintf(stderr,
 				"O número de instruções ultrapassou o limite aceito");

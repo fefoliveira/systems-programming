@@ -34,14 +34,16 @@ static void ula(Instruction instr)
 	}
 }
 
-static void memory(Instruction instr)
+static void execute_memory(Instruction instr)
 {
 	switch (instr.opcode) {
 	case MV:
-		registers[instr.op1] = memory[DATA_MEMORY_START + instr.op2];
+		registers[instr.op1] =
+			memory[DATA_MEMORY_START + instr.op2].data;
 		break;
 	case ST:
-		memory[DATA_MEMORY_START + instr.op2] = registers[instr.op1];
+		memory[DATA_MEMORY_START + instr.op2].data =
+			registers[instr.op1];
 		break;
 	default:
 		break;
@@ -82,26 +84,27 @@ static void io(Instruction instr)
 {
 	switch (instr.opcode) {
 	case W:
-		printf("\nOutput: %d\n", memory[DATA_MEMORY_START + instr.op1]);
+		printf("\nOutput: %d\n",
+		       memory[DATA_MEMORY_START + instr.op1].data);
 		break;
 	case R:
 		printf("Input (mem[%d]): ", instr.op1);
-		scanf("%d", &memory[DATA_MEMORY_START + instr.op1]);
+		scanf("%d", &memory[DATA_MEMORY_START + instr.op1].data);
 		break;
 	default:
 		break;
 	}
 }
 
-void run_vm()
+int run_vm()
 {
 	while (1) {
-		Instruction instr = memory[PC];
+		Instruction instr = memory[PC].instr;
 
 		if (instr.opcode >= ADD && instr.opcode <= DIV) {
 			ula(instr);
 		} else if (instr.opcode == MV || instr.opcode == ST) {
-			memory(instr);
+			execute_memory(instr);
 		} else if (instr.opcode >= JMP && instr.opcode <= JLT) {
 			if (controller(instr))
 				continue;

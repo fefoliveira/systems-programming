@@ -8,14 +8,12 @@
 #define INSTRUCTION_MEMORY_END 269 // 270 palavras para instruções
 #define DATA_MEMORY_START 270 // 50 palavras para dados
 
-struct typedef
-{
+typedef struct {
 	Instruction instr;
 	int data;
-}
-Memory_cell;
+} Memory_cell;
 
-external Memory_cell memory[MEMORY_SIZE];
+extern Memory_cell memory[MEMORY_SIZE];
 
 void init_memory();
 void print_instruction_memory();
