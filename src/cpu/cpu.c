@@ -121,8 +121,10 @@ int run_vm()
 		PC++;
 		if (PC > INSTRUCTION_MEMORY_END) {
 			fprintf(stderr,
-				"O PC tentou ler mais palavras do que o limite existente na memória de instruções.");
+				"Erro: PC (%d) ultrapassou o limite da memória de instruções (%d).\n",
+				PC, INSTRUCTION_MEMORY_END);
 			return 1;
 		}
 	}
+	return 0;
 }
