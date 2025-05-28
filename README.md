@@ -35,14 +35,15 @@ make run program
 ```
 
 This will:
+
 - Compile all `.c` files
 - Execute the virtual machine with the contents of `programs/program.txt`
 
 ## 🧠 How it Works
 
-- The VM has a memory of 320 words and 4 registers (a0, a1, a2, a3) + PC
+- The VM has a memory of 320 words (270 for instructions and 50 for data) and 4 registers (a0, a1, a2, a3) + PC
 - Instructions are manually encoded in `program.txt`
-- The loader reads these instructions into `instruction_memory[]`
+- The loader reads these instructions into `memory[].instr`
 - `run_vm()` interprets and executes instructions one by one until `STP` is encountered
 
 ## 🛠️ Development Notes
