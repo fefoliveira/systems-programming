@@ -106,8 +106,9 @@ int run_vm()
 		} else if (instr.opcode == MV || instr.opcode == ST) {
 			execute_memory(instr);
 		} else if (instr.opcode >= JMP && instr.opcode <= JLT) {
-			if (controller(instr))
+			if (controller(instr)) {
 				continue;
+			}
 		} else if (instr.opcode == W || instr.opcode == R) {
 			io(instr);
 		} else if (instr.opcode == STP) {
