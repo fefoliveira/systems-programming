@@ -13,7 +13,6 @@
         R       temp        # lê valor para temp (mem[0])
 loop:   W       temp        # imprime valor de temp
         JMP     loop        # volta para imprimir novamente
-
-temp:   SPACE               # reserva espaço para a variável
+temp:   SPACE   1           # reserva espaço para a variável
         END                 # fim do programa
 # -------------------------------------------------------------------------------------

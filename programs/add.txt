@@ -21,16 +21,14 @@
         R           in2         # lê valor para in2 (mem[1])
         JMP         inicio      # desvio para início da lógica
         STP                     # encerra o programa
-
-inicio: MV          a2, in1     # move mem[0] para a2
-        MV          a3, in2     # move mem[1] para a3
-        ADD         a0, a2, a3  # a0 = a2 + a3
-        ST          a0, rslt    # armazena a0 em mem[2]
+inicio: MV          2, in1      # move mem[0] para a2
+        MV          3, in2      # move mem[1] para a3
+        ADD         0, 2, 3     # a0 = a2 + a3
+        ST          0, rslt     # armazena a0 em mem[2]
         W           rslt        # imprime rslt
         JMP         inicio      # laço infinito
-
-in1:    SPACE                   # reserva espaço para valor 1
-in2:    SPACE                   # reserva espaço para valor 2
-rslt:   SPACE                   # reserva espaço para o rslt
+in1:    SPACE       1           # reserva espaço para valor 1
+in2:    SPACE       1           # reserva espaço para valor 2
+rslt:   SPACE       1           # reserva espaço para o rslt
         END                     # fim do código fonte
 # -------------------------------------------------------------------------------------

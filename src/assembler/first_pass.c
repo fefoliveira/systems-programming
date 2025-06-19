@@ -33,6 +33,16 @@ bool first_pass(const char *src_filename)
 			continue; // linha vazia ou comentário
 		}
 
+		// Remover comentários (se houver)
+		  char *comment = strchr(ptr, '#');
+			if (comment) {
+				*comment = '\0'; // corta a linha no comentário
+				trim(ptr);
+				if (ptr[0] == '\0') {
+					continue; // linha só tinha comentário
+				}
+			}
+
 		// Separar possível label no início (ex: "loop:")
 		char label[MAX_LABEL_LEN] = { 0 };
 		if (strchr(ptr, ':') != NULL) {
@@ -81,7 +91,9 @@ bool first_pass(const char *src_filename)
 				case PSEUDO_SPACE: {
 					// "SPACE N"
 					int n;
-					bool ok = (sscanf(ptr + strlen(token), "%d", &n) == 1 && n >= 0);
+					char *p =  ptr + strlen(token);
+					trim(p);
+					bool ok = (sscanf(p, "%d", &n) == 1 && n >= 0);
 					if (!ok) {
 						fprintf(stderr, "Linha %d: SPACE exige um inteiro >= 0.\n", line_num);
 						fclose(fp);
@@ -93,7 +105,9 @@ bool first_pass(const char *src_filename)
 				case PSEUDO_CONST: {
 					// "CONST K"
 					int k;
-					bool ok = (sscanf(ptr + strlen(token), "%d", &k) == 1);
+					char *p =  ptr + strlen(token);
+					trim(p);
+					bool ok = (sscanf(p, "%d", &k) == 1);
 					if (!ok) {
 						fprintf(stderr, "Linha %d: CONST exige um valor inteiro.\n", line_num);
 						fclose(fp);

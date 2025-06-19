@@ -121,8 +121,7 @@ void print_symbol_table(void)
 {
 	printf("\n>>> Tabela de Símbolos (label -> endereço):\n");
 	for (int i = 0; i < symbol_count; i++) {
-		printf("  %s -> %d\n", symbol_table[i].label,
-		       symbol_table[i].address);
+		printf("  • %s -> %d\n", symbol_table[i].label, symbol_table[i].address);
 	}
 	printf("\n");
 }

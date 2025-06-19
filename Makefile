@@ -1,26 +1,40 @@
 # Makefile
 
-# Nome do binário
-BIN = vm_file
+# Nome do binário da VM
+BIN = vm_bin
 
-# Fontes
-SRC = src/vm/main.c src/vm/memory/memory.c src/vm/loader/loader.c src/vm/cpu/cpu.c
+# Nome do binário do montador
+ASM_BIN = assembler_bin
 
-# Comando para compilar
-$(BIN): $(SRC)
-	clang -o $(BIN) $(SRC)
+# Fontes da VM
+VM_SRC = src/vm/main.c src/vm/memory/memory.c src/vm/loader/loader.c src/vm/cpu/cpu.c
 
-# Comando para rodar a VM com argumento
-run: $(BIN)
-	./$(BIN) $(ARGS)
+# Fontes do montador
+ASM_SRC = src/assembler/assembler.c src/assembler/first_pass.c src/assembler/second_pass.c src/utils/utils.c
 
-# Pega o argumento depois de 'run'
+# Compilar VM
+$(BIN): $(VM_SRC)
+	clang -o $(BIN) $(VM_SRC)
+
+# Compilar montador
+$(ASM_BIN): $(ASM_SRC)
+	clang -o $(ASM_BIN) $(ASM_SRC)
+
+# Argumento após run ou assemble
 ARGS := $(wordlist 2, $(words $(MAKECMDGOALS)), $(MAKECMDGOALS))
 
-# Limpa o executável
-clean:
-	rm -f $(BIN)
+# Rodar VM: ./vm_file programs/<arquivo.obj>
+run: $(BIN)
+	./$(BIN) programs/$(ARGS)
 
-# Impede que o Make tente criar arquivos chamados 'program.txt' etc
+# Montar: ./assembler programs/<arquivo.txt> programs/<arquivo.obj>
+assemble: $(ASM_BIN)
+	./$(ASM_BIN) programs/$(ARGS).txt programs/$(ARGS).obj
+
+# Limpar executáveis
+clean:
+	rm -f $(BIN) $(ASM_BIN)
+
+# Impede erros em alvos genéricos
 %:
 	@:
