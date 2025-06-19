@@ -1,7 +1,7 @@
 # Makefile
 
 # Nome do binário
-BIN = vm
+BIN = vm_file
 
 # Fontes
 SRC = src/main.c src/memory/memory.c src/loader/loader.c src/cpu/cpu.c
