@@ -35,8 +35,16 @@ typedef struct {
 bool first_pass(const char *src_filename);
 bool second_pass(const char *src_filename, const char *obj_filename);
 
-void print_symbol_table(void);
+bool is_pseudo(const char *token, PseudoType *out);
 int lookup_opcode(const char *mnemonic);
-bool is_pseudo(const char *token, PseudoType *outType);
+int get_symbol_address(const char *label);
+bool add_symbol(const char *label, int address);
+void print_symbol_table(void);
+
+extern const InstrDef instr_table[];
+extern const int NUM_INSTR;
+extern Symbol symbol_table[];
+extern int symbol_count;
+extern int LOCCTR;
 
 #endif
