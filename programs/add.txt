@@ -1,10 +1,36 @@
-11 0       # r mem[0]           ; lê um valor para mem[0]
-11 1       # r mem[1]           ; lê um valor para mem[1]
-6 4        # jmp instr_mem[4]   ; "pula" para a linha 5 do código (mem[4])
-12         # stp                ; fim do programa
-4 2 0      # mv a2, mem[0]      ; carrega val1 (10) da memória para o registrador a2
-4 3 1      # mv a3, mem[1]      ; carrega val2 (20) da memória para o registrador a3
-0 0 2 3    # add a0, a2, a3     ; a0 = a2 + a3 → soma os valores (10 + 20)
-5 0 2      # st mem[2], a0      ; armazena o conteúdo de a0 em mem[2]
-10 2       # w mem[2]           ; imprime o valor de mem[2]
-6 3        # jmp instr_mem[4]   ; "pula" para a linha 5 do código (mem[4])
+# CÓDIGO JÁ MONTADO -> USADO DIRETO NA MÁQUINA VIRTUAL:
+# -------------------------------------------------------------------------------------
+# 11 0       # r mem[0]           ; lê um valor para mem[0]
+# 11 1       # r mem[1]           ; lê um valor para mem[1]
+# 6 4        # jmp instr_mem[4]   ; "pula" para a linha 5 do código (mem[4])
+# 12         # stp                ; fim do programa
+# 4 2 0      # mv a2, mem[0]      ; carrega val1 (10) da memória para o registrador a2
+# 4 3 1      # mv a3, mem[1]      ; carrega val2 (20) da memória para o registrador a3
+# 0 0 2 3    # add a0, a2, a3     ; a0 = a2 + a3 → soma os valores (10 + 20)
+# 5 0 2      # st mem[2], a0      ; armazena o conteúdo de a0 em mem[2]
+# 10 2       # w mem[2]           ; imprime o valor de mem[2]
+# 6 3        # jmp instr_mem[4]   ; "pula" para a linha 5 do código (mem[4])
+# -------------------------------------------------------------------------------------
+#
+#
+#
+#
+# CÓDIGO FONTE COM MNEMÔNICOS -> SERÁ MONTADO PELO MONTADOR DE DUAS PASSAGENS:
+# -------------------------------------------------------------------------------------
+        R           in1         # lê valor para in1 (mem[0])
+        R           in2         # lê valor para in2 (mem[1])
+        JMP         inicio      # desvio para início da lógica
+        STP                     # encerra o programa
+
+inicio: MV          a2, in1     # move mem[0] para a2
+        MV          a3, in2     # move mem[1] para a3
+        ADD         a0, a2, a3  # a0 = a2 + a3
+        ST          a0, rslt    # armazena a0 em mem[2]
+        W           rslt        # imprime rslt
+        JMP         inicio      # laço infinito
+
+in1:    SPACE                   # reserva espaço para valor 1
+in2:    SPACE                   # reserva espaço para valor 2
+rslt:   SPACE                   # reserva espaço para o rslt
+        END                     # fim do código fonte
+# -------------------------------------------------------------------------------------
