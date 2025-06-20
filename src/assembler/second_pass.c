@@ -69,32 +69,7 @@ bool second_pass(const char *src_filename, const char *obj_filename)
 		// Verifica se o token é pseudo-instrução
 		PseudoType pseudo;
 		if (is_pseudo(token, &pseudo)) {
-			switch (pseudo) {
-				case PSEUDO_SPACE: {
-					int n;
-					sscanf(ptr + strlen(token), "%d", &n);
-					for (int i = 0; i < n; i++) {
-						fprintf(fp_obj, "0\n"); // SPACE: gera 'n' linhas com zeros
-						loc++;
-					}
-					break;
-				}
-				case PSEUDO_CONST: {
-					int k;
-					sscanf(ptr + strlen(token), "%d", &k);
-					fprintf(fp_obj, "%d\n", k); // CONST: gera uma linha com o valor 'k'
-					loc++;
-					break;
-				}
-				case PSEUDO_END: {
-					// fim; montagem encerrada. Não gera-se mais nada.
-					fclose(fp_src);
-					fclose(fp_obj);
-					return true;
-				}
-				default:
-					break;
-			}
+			continue;
 		} else {
 			// É uma instrução normal
 			int opc = lookup_opcode(token);
