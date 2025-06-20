@@ -1,5 +1,0 @@
-# CÓDIGO JÁ EM LINGUAGEM DE MÁQUINA PARA SER RODADO DIRETO NA VM:
-# ---------------------------------------------------------------
-11 0       # r mem[0]         ; lê um valor para mem[0]
-10 0       # w mem[0]         ; imprime o valor de mem[0]
-6 1        # jmp instr_mem[1] ; volta para reimprimir (laço)

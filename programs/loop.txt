@@ -1,4 +1,4 @@
-# CÓDIGO JÁ MONTADO -> USADO DIRETO NA MÁQUINA VIRTUAL:
+# CÓDIGO JÁ EM LINGUAGEM DE MÁQUINA -> USADO ANTERIORMENTE DIRETO NA MÁQUINA VIRTUAL:
 # -------------------------------------------------------------------------------------
 # 11 0       # r mem[0]         ; lê um valor para mem[0]
 # 10 0       # w mem[0]         ; imprime o valor de mem[0]
