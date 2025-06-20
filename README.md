@@ -9,21 +9,33 @@ Repository with the project developed during the Systems Programming discipline 
 ├── LICENSE             # License of the project (default MIT or custom)
 ├── Makefile            # Compilation automation using `make`
 ├── programs
-│   └── program.txt     # Example program written using the VM instruction format
+│   ├── program.txt     # Program written using the VM instruction format with mnemonics
+│   └── program.obj     # Object file assembled by the two-pass-assembler (this guy gonna run in VM)
 ├── README.md           # This file
 ├── src
-│   ├── cpu
-│   │   ├── cpu.c       # Implementation of instruction execution logic
-│   │   └── cpu.h       # Header for cpu.c
-│   ├── isa.h           # Instruction Set Architecture: defines opcodes and instruction format
-│   ├── loader
-│   │   ├── loader.c    # Loads a text-based instruction file into the instruction memory
-│   │   └── loader.h    # Header loader.c
-│   ├── main.c          # Program entry point: initializes memory, loads program, runs VM
-│   └── memory
-│       ├── memory.c    # Defines the instruction and data memory arrays and memory-related functions
-│       └── memory.h    # Header for memory module (registers, PC, function declarations)
-└── vm                  # Binary executable generated after compilation
+│   ├── assembler
+│   │   ├── assembler.c     # Implementation of the two-pass-assembler (assembler utils functions and main())
+│   │   ├── assembler.h     # Header for "assembler.c", "first_pass.c" and "second_pass.c"
+│   │   ├── fist_pass.c     # First-pass function for the two-pass-assembler
+│   │   └── second_pass.c   # Second-pass function for the two-pass-assembler
+│   ├── utils
+│   │   ├── utils.c       # Implementation of utils functions (like trim())
+│   │   └── utils.h       # Header for utils.c
+│   └── vm
+│       ├── cpu
+│       │   ├──
+│       │   ├── cpu.c       # Implementation of instruction execution logic
+│       │   └── cpu.h       # Header for cpu.c
+│       ├── loader
+│       │   ├── loader.c    # Loads a text-based instruction file into the instruction memory
+│       │   └── loader.h    # Header loader.c
+│       ├── memory
+│       │   ├── memory.c    # Defines the instruction and data memory arrays and memory-related functions
+│       │   └── memory.h    # Header for memory module (registers, PC, function declarations)
+│       ├── isa.h           # Instruction Set Architecture: defines opcodes and instruction format
+│       └── main.c          # Program entry point: initializes memory, loads program, runs VM
+├── assembler_bin   # Binary executable generated after assembler compilation
+└── vm_bin          # Binary executable generated after vm compilation
 ```
 
 ## ⚙️ How to Compile and Execute
@@ -31,18 +43,27 @@ Repository with the project developed during the Systems Programming discipline 
 Make sure you're in the project root directory. Then run:
 
 ```bash
+make assemble program
+```
+
+This will:
+
+- Assemble the source code in "program.txt" into a object file "program.obj", which will be be created in the same directory.
+  Once the object file is assembled, run:
+
+```bash
 make run program
 ```
 
 This will:
 
-- Compile all `.c` files
-- Execute the virtual machine with the contents of `programs/program.txt`
+- Execute the virtual machine with the contents of `programs/program.obj`
 
 ## 🧠 How it Works
 
 - The VM has a memory of 320 words (270 for instructions and 50 for data) and 4 registers (a0, a1, a2, a3) + PC
-- Instructions are manually encoded in `program.txt`
+- Instructions are manually encoded in `program.txt` with the mnemonics
+- The assembler read this source code, transform it into machine language and put it into a object file `program.obj`
 - The loader reads these instructions into `memory[].instr`
 - `run_vm()` interprets and executes instructions one by one until `STP` is encountered
 
