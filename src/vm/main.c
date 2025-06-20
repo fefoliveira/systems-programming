@@ -15,8 +15,7 @@ int main(int argc, char *argv[])
 	init_memory();
 
 	char program_file[256];
-	snprintf(program_file, sizeof(program_file), "programs/%s.txt",
-		 argv[1]);
+	snprintf(program_file, sizeof(program_file), "%s", argv[1]);
 	int err = load_program(program_file);
 	if (err) {
 		return 1;

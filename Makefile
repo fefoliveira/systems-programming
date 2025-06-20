@@ -25,7 +25,7 @@ ARGS := $(wordlist 2, $(words $(MAKECMDGOALS)), $(MAKECMDGOALS))
 
 # Rodar VM: ./vm_file programs/<arquivo.obj>
 run: $(BIN)
-	./$(BIN) programs/$(ARGS)
+	./$(BIN) programs/$(ARGS).obj
 
 # Montar: ./assembler programs/<arquivo.txt> programs/<arquivo.obj>
 assemble: $(ASM_BIN)
