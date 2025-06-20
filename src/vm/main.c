@@ -25,5 +25,7 @@ int main(int argc, char *argv[])
 
 	run_vm();
 
+	print_data_memory();
+
 	return 0;
 }
