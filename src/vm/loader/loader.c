@@ -9,6 +9,7 @@ bool load_program(const char *filename)
 		perror("Erro ao abrir o arquivo");
 		return 1;
 	}
+	printf("\nCarregando o programa: %s\n", filename);
 
 	int opcode, op1, op2, op3;
 	int line = 0;

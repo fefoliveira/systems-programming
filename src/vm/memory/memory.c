@@ -30,7 +30,7 @@ const char *opcode_names[] = {
 
 void print_instruction_memory()
 {
-	printf("\nConteúdo da memória de instruções:\n");
+	printf("\nConteúdo na memória de instruções:\n");
 	for (int i = 0; i <= INSTRUCTION_MEMORY_END; i++) {
 		if (memory[i].instr.opcode != -1) {
 			const char *opcode_str =
@@ -55,7 +55,7 @@ void print_instruction_memory()
 
 void print_data_memory()
 {
-	printf("\nConteúdo da memória de dados:\n");
+	printf("\nConteúdo na memória de dados:\n");
 	for (int i = DATA_MEMORY_START; i < MEMORY_SIZE; i++) {
 		if (memory[i].data != 0) {
 			printf("data_mem[%d]: %d\n", i,
