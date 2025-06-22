@@ -58,7 +58,7 @@ void print_data_memory()
 	printf("\nConteúdo na memória de dados:\n");
 	for (int i = DATA_MEMORY_START; i < MEMORY_SIZE; i++) {
 		if (memory[i].data != 0) {
-			printf("data_mem[%d]: %d\n", i,
+			printf("data_mem[%d]: %d\n", i-270,
 			       memory[i].data);
 		}
 	}
