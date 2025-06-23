@@ -88,7 +88,7 @@ static void io(Instruction instr)
 		       memory[DATA_MEMORY_START + instr.op1].data);
 		break;
 	case R:
-		printf("Input (mem[%d]): ", instr.op1);
+		printf("Input (data_mem[%d]): ", instr.op1);
 		scanf("%d", &memory[DATA_MEMORY_START + instr.op1].data);
 		break;
 	default:
