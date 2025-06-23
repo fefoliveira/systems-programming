@@ -9,7 +9,7 @@
    PASSAGEM 1: 
    - Abre o arquivo de fonte (.txt)
    - Percorre linha a linha, identifica labels e mnemônicos
-   - Atualiza LOCCTR conforme instruções ou pseudo-instruções
+   - Atualiza os LOCCTR conforme instruções ou pseudo-instruções
    - Armazena labels e seus endereços na tabela de símbolos
    Se encontrar erro (símbolo redefinido, instrução inválida), retorna false.
    -------------------------------------------------------------------------- */
@@ -22,7 +22,8 @@ bool first_pass(const char *src_filename)
     }
 
 	char line[MAX_LINE_LEN];
-    LOCCTR = 0;
+    instr_LOCCTR = 0;
+    data_LOCCTR = 0;
     symbol_count = 0;
 
     int line_num = 0;
@@ -57,13 +58,6 @@ bool first_pass(const char *src_filename)
             label[len] = '\0';
             trim(label);
 
-			// adiciona à tabela de símbolos com endereço LOCCTR atual
-			bool ok = add_symbol(label, LOCCTR);
-			if (!ok) {
-                fclose(fp);
-				return false; // símbolo redefinido ou tabela cheia
-            }
-
 			// avança ptr para depois do “:”
 			ptr = colon + 1;	// ex.: " ADD R1 R2 R3"
 			trim(ptr);	// ex.: "ADD R1 R2 R3"
@@ -83,10 +77,21 @@ bool first_pass(const char *src_filename)
             fclose(fp);
             return false;
         }
+        printf("token: '%s'\n", token);
+        print_symbol_table();
 
 		// Verifica se o token é pseudo-instr (SPACE, CONST, END)
         PseudoType pseudo;
         if (is_pseudo(token, &pseudo)) {
+            // adiciona à tabela de símbolos com o respectivo endereço LOCCTR atual (de instrução ou dado)
+            if (label[0] != '\0') {
+                bool ok = add_symbol(label, data_LOCCTR);
+                if (!ok) {
+                    fclose(fp);
+                    return false; // símbolo redefinido ou tabela cheia
+                }
+            }
+            
             switch (pseudo) {
                 case PSEUDO_SPACE: {
 					// "SPACE N"
@@ -99,7 +104,7 @@ bool first_pass(const char *src_filename)
                         fclose(fp);
                         return false;
                     }
-					LOCCTR += n; // aloca N palavras
+					data_LOCCTR += n; // aloca N palavras
                     break;
                 }
                 case PSEUDO_CONST: {
@@ -113,7 +118,7 @@ bool first_pass(const char *src_filename)
                         fclose(fp);
                         return false;
                     }
-					LOCCTR += 1; // uma palavra (armazena a constante k)
+					data_LOCCTR += 1; // uma palavra (armazena a constante k)
                     break;
                 }
                 case PSEUDO_END: {
@@ -124,15 +129,23 @@ bool first_pass(const char *src_filename)
                 default:
                     break;
             }
-        } else {
-			// Não é pseudo: deve ser instrução normal
+        } else { // não é pseudo: deve ser instrução normal
+            // adiciona à tabela de símbolos com o respectivo endereço LOCCTR atual (de instrução ou dado)
+            if (label[0] != '\0') {
+                bool ok = add_symbol(label, instr_LOCCTR);
+                if (!ok) {
+                    fclose(fp);
+                    return false; // símbolo redefinido ou tabela cheia
+                }
+            }
+
             int opc = lookup_opcode(token);
             if (opc < 0) {
                 fprintf(stderr, "Linha %d: instrução \"%s\" inválida.\n", line_num, token);
                 fclose(fp);
                 return false;
             }
-			LOCCTR += 1; // conta 1 palavra para a instrução
+			instr_LOCCTR += 1; // conta 1 palavra para a instrução
         }
     } // while fgets
 

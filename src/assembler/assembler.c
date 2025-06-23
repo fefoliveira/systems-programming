@@ -41,7 +41,8 @@ int symbol_count = 0;
    Contador de localização (LOCCTR: Location Counter): "endereço corrente" 
    durante montagem (SINGLE-MODULE).
    -------------------------------------------------------------------------- */
-int LOCCTR = 0;
+int instr_LOCCTR = 0;
+int data_LOCCTR = 0;
 
 /* --------------------------------------------------------------------------
    Multi-módulo: array de módulos e contagem.

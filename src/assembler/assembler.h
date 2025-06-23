@@ -67,7 +67,8 @@ extern const InstrDef instr_table[];
 extern const int NUM_INSTR;
 extern Symbol symbol_table[];
 extern int symbol_count;
-extern int LOCCTR;
+extern int instr_LOCCTR;
+extern int data_LOCCTR;
 
 // Variáveis para multi-module
 extern ModuleInfo modules[];
