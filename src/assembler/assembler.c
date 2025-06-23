@@ -218,11 +218,11 @@ int main(int argc, char *argv[])
 		// 1ª passagem: constrói tabela de símbolos
 		bool ok = first_pass(src_file);
 		if (!ok) {
-				fprintf(stderr, "Erro na primeira passagem. Abortando.\n");
-				return EXIT_FAILURE;
-			}
+            fprintf(stderr, "Erro na primeira passagem. Abortando.\n");
+            return EXIT_FAILURE;
+        }
 
-			print_symbol_table();
+        print_symbol_table();
 
 		// 2ª passagem: gera arquivo objeto
 		ok = second_pass(src_file, obj_file);
