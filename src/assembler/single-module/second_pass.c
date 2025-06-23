@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "../utils/utils.h"
-#include "assembler.h"
+#include "../../utils/utils.h"
+#include "../assembler.h"
 
 /* --------------------------------------------------------------------------
    PASSAGEM 2:
