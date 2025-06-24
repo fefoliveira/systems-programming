@@ -1,11 +1,11 @@
 GLOBAL  in3
-GLOBAL  mult
+GLOBAL  add
 EXTERN  in1
 EXTERN  in2
 EXTERN  fim
 #
 in3:    SPACE   1
-mult:   MV      1   in1
+add:    MV      1   in1
         MV      2   in2
         ADD     3   1   2 
         ST      in3 3

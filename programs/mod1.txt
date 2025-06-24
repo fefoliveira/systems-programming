@@ -2,13 +2,13 @@ GLOBAL  in1
 GLOBAL  in2
 GLOBAL  fim
 EXTERN  in3
-EXTERN  mult
+EXTERN  add
 #
 in1:    SPACE   1
 in2:    SPACE   1
 inicio: R       in1
         R       in2
-        JMP     mult     
+        JMP     add     
 fim:    W       in3
         STP
         END
