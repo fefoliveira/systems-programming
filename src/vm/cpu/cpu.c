@@ -42,8 +42,8 @@ static void execute_memory(Instruction instr)
 			memory[DATA_MEMORY_START + instr.op2].data;
 		break;
 	case ST:
-		memory[DATA_MEMORY_START + instr.op2].data =
-			registers[instr.op1];
+		memory[DATA_MEMORY_START + instr.op1].data =
+			registers[instr.op2];
 		break;
 	default:
 		break;
