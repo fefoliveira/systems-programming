@@ -95,7 +95,7 @@ static bool process_module_first(const char *filename, ModuleInfo *mod)
                 continue;
             }
         }
-        int found = -1;
+        int label_idx = -1;
         // Verifica label
         if (strchr(ptr, ':') != NULL) {
             char *colon = strchr(ptr, ':');
@@ -106,6 +106,7 @@ static bool process_module_first(const char *filename, ModuleInfo *mod)
             label[len] = '\0';
             trim(label);
             // registrar definição local: endereço relativo = LOCCTR_local
+            int found = -1;
             for (int i = 0; i < mod->def_count; i++) {
                 if (strcmp(mod->defs[i].label, label) == 0) {
                     found = i;
@@ -119,8 +120,12 @@ static bool process_module_first(const char *filename, ModuleInfo *mod)
                     mod->defs[mod->def_count].label[MAX_LABEL_LEN - 1] = '\0';
                     mod->defs[mod->def_count].rel_addr = -1; // será preenchido assim que achar o mnemônico
                     mod->defs[mod->def_count].is_global = false;
+                    label_idx = mod->def_count;
                     mod->def_count++;
                 }
+            } else {
+                // já existia entrada (talvez marcada GLOBAL anteriormente), preencher "rel_addr" na posição "found"
+                label_idx = found;
             }
             // avança ptr após ":"
             ptr = colon + 1;
@@ -137,16 +142,9 @@ static bool process_module_first(const char *filename, ModuleInfo *mod)
         // Pseudo?
         PseudoType pseudo;
         if (is_pseudo(token2, &pseudo)) {
-            if (pseudo != PSEUDO_END && mod->def_count-1 < MAX_SYMBOLS) {
-                if (found < 0) {
-                    // rel_addr para uma nova definição local
-                    mod->defs[mod->def_count-1].rel_addr = data_LOCCTR_local;
-                    printf("A: %s\n", mod->defs[mod->def_count-1].label);
-                } else {
-                    // já existia entrada (talvez marcada GLOBAL anteriormente), preencher rel_addr
-                    mod->defs[found].rel_addr = data_LOCCTR_local;
-                    printf("B: %s\n", mod->defs[found].label);
-                }
+            if (pseudo != PSEUDO_END && label_idx >= 0) {
+                mod->defs[label_idx].rel_addr = data_LOCCTR_local;
+                // printf("A: %s\n", mod->defs[label_idx].label);
             }
             if (pseudo == PSEUDO_SPACE) {
                 int n;
@@ -165,14 +163,9 @@ static bool process_module_first(const char *filename, ModuleInfo *mod)
             }
         } else {
             // Instrução normal
-            if (found < 0) {
-                // rel_addr para uma nova definição local
-                mod->defs[mod->def_count-1].rel_addr = instr_LOCCTR_local;
-                printf("C: %s\n", mod->defs[mod->def_count-1].label);
-            } else {
-                // já existia entrada (talvez marcada GLOBAL anteriormente), preencher rel_addr
-                mod->defs[found].rel_addr = instr_LOCCTR_local;
-                printf("D: %s\n", mod->defs[found].label);
+            if (label_idx >= 0) {
+                mod->defs[label_idx].rel_addr = instr_LOCCTR_local;
+                // printf("B: %s\n", mod->defs[label_idx].label);
             }
             int opc = lookup_opcode(token2);
             if (opc < 0) {
