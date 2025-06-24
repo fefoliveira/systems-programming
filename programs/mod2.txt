@@ -2,11 +2,11 @@ GLOBAL  in3
 GLOBAL  add
 EXTERN  in1
 EXTERN  in2
-EXTERN  fim
+EXTERN  fim                     # "sub" ao inves de "fim" para usar mod3
 #
 in3:    SPACE   1
 add:    MV      1   in1
         MV      2   in2
         ADD     3   1   2 
         ST      in3 3
-        JMP     fim
+        JMP     fim             # "sub" ao inves de "fim" para usar mod3

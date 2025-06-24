@@ -1,0 +1,13 @@
+GLOBAL  sub
+GLOBAL  in4
+EXTERN  in1
+EXTERN  in3
+EXTERN  fim
+#
+in4:    SPACE   1
+sub:    MV      1       in1
+        MV      2       in3
+        SUB     3       1       2
+        ST      in4     3
+        W       in4
+        JMP     fim
