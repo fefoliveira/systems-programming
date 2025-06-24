@@ -144,7 +144,7 @@ static bool process_module_first(const char *filename, ModuleInfo *mod)
         if (is_pseudo(token2, &pseudo)) {
             if (pseudo != PSEUDO_END && label_idx >= 0) {
                 mod->defs[label_idx].rel_addr = data_LOCCTR_local;
-                // printf("A: %s\n", mod->defs[label_idx].label);
+                mod->defs[label_idx].is_data = true; // marca como definição de dado
             }
             if (pseudo == PSEUDO_SPACE) {
                 int n;
@@ -165,7 +165,7 @@ static bool process_module_first(const char *filename, ModuleInfo *mod)
             // Instrução normal
             if (label_idx >= 0) {
                 mod->defs[label_idx].rel_addr = instr_LOCCTR_local;
-                // printf("B: %s\n", mod->defs[label_idx].label);
+                mod->defs[label_idx].is_data = false; // marca como definição de instrução
             }
             int opc = lookup_opcode(token2);
             if (opc < 0) {
@@ -227,9 +227,8 @@ bool first_pass_multi(int filecount, const char *filenames[])
                             sym, modules[i].filename);
                     return false;
                 }
-                PseudoType pseudo;
                 int abs_addr;
-                if(is_pseudo(sym, &pseudo)) {
+                if(modules[i].defs[j].is_data) {
                     abs_addr = data_cur_base + rel;
                 } else {
                     abs_addr = instr_cur_base + rel;

@@ -50,6 +50,7 @@ typedef struct {
 		char label[MAX_LABEL_LEN];
 		int rel_addr; // endereço relativo dentro do módulo
 		bool is_global; // marcado se for um símbolo GLOBAL
+		bool is_data; // true se for uma definição de dado (CONST ou SPACE)
 	} defs[MAX_SYMBOLS];
 
 	// símbolos externos referenciados:
