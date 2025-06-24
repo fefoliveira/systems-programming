@@ -31,7 +31,6 @@ bool second_pass_multi(int filecount, const char *filenames[], const char *out_f
             return false;
         }
         int line_num = 0;
-        int LOCCTR_local = 0;
         while (fgets(line_buffer, sizeof(line_buffer), fp) != NULL) {
             line_num++;
             char *ptr = line_buffer;
@@ -78,9 +77,6 @@ bool second_pass_multi(int filecount, const char *filenames[], const char *out_f
                         fclose(fp_out);
                         return false;
                     }
-                    for (int k = 0; k < n; k++) {
-                        LOCCTR_local++;
-                    }
                 } else if (pseudo == PSEUDO_CONST) {
                     int k;
                     char *p = ptr + strlen(token);
@@ -91,7 +87,6 @@ bool second_pass_multi(int filecount, const char *filenames[], const char *out_f
                         fclose(fp_out);
                         return false;
                     }
-                    LOCCTR_local++;
                 } else if (pseudo == PSEUDO_END) {
                     break;
                 }
@@ -123,8 +118,6 @@ bool second_pass_multi(int filecount, const char *filenames[], const char *out_f
                         ops[j] = atoi(oper);
                     } else {
                         // buscar em EXTAB (symbols globais e locais já registrados)
-                        extern int EXTAB_count;       // em assembler.c
-                        extern EXTABEntry EXTAB[];    // em assembler.c
                         int abs_addr = EXTAB_lookup(oper);
                         if (abs_addr < 0) {
                             fprintf(stderr, "Erro %s: símbolo \"%s\" não definido.\n",
@@ -140,11 +133,9 @@ bool second_pass_multi(int filecount, const char *filenames[], const char *out_f
                 }
                 fprintf(fp_out, "%d %d %d %d\n", instr_table[opc].opcode,
                         ops[0], ops[1], ops[2]);
-                LOCCTR_local++;
             }
         }
         fclose(fp);
-        // Opcional: verificar LOCCTR_local == mod->size
     }
     fclose(fp_out);
     return true;

@@ -6,9 +6,6 @@
 #include "../../utils/utils.h"
 #include "../assembler.h"
 
-// Buffer de linha
-static char line_buffer[MAX_LINE_LEN];
-
 // Processa um único módulo (primeira passagem local):
 // Preenche ModuleInfo: defs (com rel_addr), externs, e size.
 static bool process_module_first(const char *filename, ModuleInfo *mod)
@@ -23,11 +20,12 @@ static bool process_module_first(const char *filename, ModuleInfo *mod)
     mod->def_count = 0;
     mod->extern_count = 0;
 
+    char line[MAX_LINE_LEN];
     int LOCCTR_local = 0;
     int line_num = 0;
-    while (fgets(line_buffer, sizeof(line_buffer), fp) != NULL) {
+    while (fgets(line, sizeof(line), fp) != NULL) {
         line_num++;
-        char *ptr = line_buffer;
+        char *ptr = line;
         trim(ptr);
         if (ptr[0] == '\0' || ptr[0] == '#') {
             continue;
@@ -57,7 +55,7 @@ static bool process_module_first(const char *filename, ModuleInfo *mod)
                         }
                     }
                     if (found < 0) {
-                        // adiciona entrada com rel_addr=-1 (será preenchido quando achar label:)
+                        // adiciona entrada com rel_addr=-1 (será preenchido quando achar o "label:" posterior)
                         if (mod->def_count < MAX_SYMBOLS) {
                             strncpy(mod->defs[mod->def_count].label, sym, MAX_LABEL_LEN);
                             mod->defs[mod->def_count].label[MAX_LABEL_LEN - 1] = '\0';
@@ -129,7 +127,7 @@ static bool process_module_first(const char *filename, ModuleInfo *mod)
             ptr = colon + 1;
             trim(ptr);
             if (ptr[0] == '\0') {
-                continue;
+                continue; // linha tinha só label e nada mais
             }
         }
         // Agora ptr aponta para mnemônico ou pseudo
@@ -185,14 +183,26 @@ bool first_pass_multi(int filecount, const char *filenames[])
             return false;
         }
         module_count++;
+        // printf("Módulo %d: %s\n", module_count, modules[module_count - 1].filename);
+        // printf("  Tamanho: %d\n", modules[module_count - 1].size);
+        // printf("  Definições (%d):\n", modules[module_count - 1].def_count);
+        // for (int d = 0; d < modules[module_count - 1].def_count; d++) {
+        //     printf("    %s (rel_addr=%d, %s)\n",
+        //            modules[module_count - 1].defs[d].label,
+        //            modules[module_count - 1].defs[d].rel_addr,
+        //            modules[module_count - 1].defs[d].is_global ? "GLOBAL" : "local");
+        // }
+        // printf("  Externos (%d):\n", modules[module_count - 1].extern_count);
+        // for (int e = 0; e < modules[module_count - 1].extern_count; e++) {
+        //     printf("    %s\n", modules[module_count - 1].externs[e]);
+        // }
     }
     // Construir EXTAB e atribuir CSADDR
     int cur_base = 0;
     // Reiniciar EXTAB
-    extern int EXTAB_count;  // definido em assembler.c
-    extern EXTABEntry EXTAB[]; // conforme em assembler.c
     EXTAB_count = 0;
     for (int i = 0; i < module_count; i++) {
+        // printf("cur_base: %d\n", cur_base);
         modules[i].CSADDR = cur_base;
         // Para cada definição local marcada is_global, adicionar a EXTAB
         for (int j = 0; j < modules[i].def_count; j++) {

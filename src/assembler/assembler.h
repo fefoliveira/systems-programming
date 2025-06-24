@@ -73,6 +73,8 @@ extern int data_LOCCTR;
 // Variáveis para multi-module
 extern ModuleInfo modules[];
 extern int module_count;
+extern EXTABEntry EXTAB[];
+extern int EXTAB_count;
 
 // Funções de passagem single-module
 bool first_pass(const char *src_filename);
