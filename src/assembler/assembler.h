@@ -39,8 +39,10 @@ typedef struct {
 // Informação de cada módulo quando em multi-module
 typedef struct {
 	const char *filename; // ponteiro para nome do arquivo-fonte
-	int size; // LOCCTR relativo (número de palavras)
-	int CSADDR; // base atribuída no endereço final
+	int instr_size; // LOCCTR relativo para instr_mem (número de palavras)
+	int data_size; // LOCCTR relativo para data_mem (número de palavras)
+	int instr_CSADDR; // base atribuída no endereço final
+	int data_CSADDR;
 
 	// definições de símbolos locais:
 	int def_count;

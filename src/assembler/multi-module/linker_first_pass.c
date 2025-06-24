@@ -16,12 +16,14 @@ static bool process_module_first(const char *filename, ModuleInfo *mod)
         return false;
     }
     mod->filename = filename;
-    mod->size = 0;
+    mod->instr_size = 0;
+    mod->data_size = 0;
     mod->def_count = 0;
     mod->extern_count = 0;
 
     char line[MAX_LINE_LEN];
-    int LOCCTR_local = 0;
+    int instr_LOCCTR_local = 0;
+    int data_LOCCTR_local = 0;
     int line_num = 0;
     while (fgets(line, sizeof(line), fp) != NULL) {
         line_num++;
@@ -93,6 +95,7 @@ static bool process_module_first(const char *filename, ModuleInfo *mod)
                 continue;
             }
         }
+        int found = -1;
         // Verifica label
         if (strchr(ptr, ':') != NULL) {
             char *colon = strchr(ptr, ':');
@@ -103,7 +106,6 @@ static bool process_module_first(const char *filename, ModuleInfo *mod)
             label[len] = '\0';
             trim(label);
             // registrar definição local: endereço relativo = LOCCTR_local
-            int found = -1;
             for (int i = 0; i < mod->def_count; i++) {
                 if (strcmp(mod->defs[i].label, label) == 0) {
                     found = i;
@@ -115,13 +117,10 @@ static bool process_module_first(const char *filename, ModuleInfo *mod)
                 if (mod->def_count < MAX_SYMBOLS) {
                     strncpy(mod->defs[mod->def_count].label, label, MAX_LABEL_LEN);
                     mod->defs[mod->def_count].label[MAX_LABEL_LEN - 1] = '\0';
-                    mod->defs[mod->def_count].rel_addr = LOCCTR_local;
+                    mod->defs[mod->def_count].rel_addr = -1; // será preenchido assim que achar o mnemônico
                     mod->defs[mod->def_count].is_global = false;
                     mod->def_count++;
                 }
-            } else {
-                // já existia entrada (talvez marcada GLOBAL anteriormente), preencher rel_addr
-                mod->defs[found].rel_addr = LOCCTR_local;
             }
             // avança ptr após ":"
             ptr = colon + 1;
@@ -138,6 +137,17 @@ static bool process_module_first(const char *filename, ModuleInfo *mod)
         // Pseudo?
         PseudoType pseudo;
         if (is_pseudo(token2, &pseudo)) {
+            if (pseudo != PSEUDO_END && mod->def_count-1 < MAX_SYMBOLS) {
+                if (found < 0) {
+                    // rel_addr para uma nova definição local
+                    mod->defs[mod->def_count-1].rel_addr = data_LOCCTR_local;
+                    printf("A: %s\n", mod->defs[mod->def_count-1].label);
+                } else {
+                    // já existia entrada (talvez marcada GLOBAL anteriormente), preencher rel_addr
+                    mod->defs[found].rel_addr = data_LOCCTR_local;
+                    printf("B: %s\n", mod->defs[found].label);
+                }
+            }
             if (pseudo == PSEUDO_SPACE) {
                 int n;
                 char *p = ptr + strlen(token2);
@@ -147,24 +157,34 @@ static bool process_module_first(const char *filename, ModuleInfo *mod)
                     fclose(fp);
                     return false;
                 }
-                LOCCTR_local += n;
+                data_LOCCTR_local += n;
             } else if (pseudo == PSEUDO_CONST) {
-                LOCCTR_local += 1;
+                data_LOCCTR_local += 1;
             } else if (pseudo == PSEUDO_END) {
                 break;
             }
         } else {
             // Instrução normal
+            if (found < 0) {
+                // rel_addr para uma nova definição local
+                mod->defs[mod->def_count-1].rel_addr = instr_LOCCTR_local;
+                printf("C: %s\n", mod->defs[mod->def_count-1].label);
+            } else {
+                // já existia entrada (talvez marcada GLOBAL anteriormente), preencher rel_addr
+                mod->defs[found].rel_addr = instr_LOCCTR_local;
+                printf("D: %s\n", mod->defs[found].label);
+            }
             int opc = lookup_opcode(token2);
             if (opc < 0) {
                 fprintf(stderr, "Erro %s: instrução \"%s\" inválida.\n", filename, token2);
                 fclose(fp);
                 return false;
             }
-            LOCCTR_local += 1;
+            instr_LOCCTR_local += 1;
         }
     }
-    mod->size = LOCCTR_local;
+    mod->instr_size = instr_LOCCTR_local;
+    mod->data_size = data_LOCCTR_local;
     fclose(fp);
     return true;
 }
@@ -184,7 +204,6 @@ bool first_pass_multi(int filecount, const char *filenames[])
         }
         module_count++;
         // printf("Módulo %d: %s\n", module_count, modules[module_count - 1].filename);
-        // printf("  Tamanho: %d\n", modules[module_count - 1].size);
         // printf("  Definições (%d):\n", modules[module_count - 1].def_count);
         // for (int d = 0; d < modules[module_count - 1].def_count; d++) {
         //     printf("    %s (rel_addr=%d, %s)\n",
@@ -198,12 +217,13 @@ bool first_pass_multi(int filecount, const char *filenames[])
         // }
     }
     // Construir EXTAB e atribuir CSADDR
-    int cur_base = 0;
+    int instr_cur_base = 0;
+    int data_cur_base = 0;
     // Reiniciar EXTAB
     EXTAB_count = 0;
     for (int i = 0; i < module_count; i++) {
-        // printf("cur_base: %d\n", cur_base);
-        modules[i].CSADDR = cur_base;
+        modules[i].instr_CSADDR = instr_cur_base;
+        modules[i].data_CSADDR = data_cur_base;
         // Para cada definição local marcada is_global, adicionar a EXTAB
         for (int j = 0; j < modules[i].def_count; j++) {
             if (modules[i].defs[j].is_global) {
@@ -214,13 +234,21 @@ bool first_pass_multi(int filecount, const char *filenames[])
                             sym, modules[i].filename);
                     return false;
                 }
-                int abs_addr = cur_base + rel;
+                PseudoType pseudo;
+                int abs_addr;
+                if(is_pseudo(sym, &pseudo)) {
+                    abs_addr = data_cur_base + rel;
+                } else {
+                    abs_addr = instr_cur_base + rel;
+                }
                 if (!EXTAB_add(sym, abs_addr)) {
                     return false;
                 }
             }
         }
-        cur_base += modules[i].size;
+        instr_cur_base += modules[i].instr_size;
+        data_cur_base += modules[i].data_size;
+        // printf("instr_cur_base: %d, data_cur_base: %d\n", instr_cur_base, data_cur_base);
     }
     // Verificar externos: cada EXTERN deve estar em EXTAB
     for (int i = 0; i < module_count; i++) {
