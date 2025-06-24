@@ -196,18 +196,6 @@ bool first_pass_multi(int filecount, const char *filenames[])
             return false;
         }
         module_count++;
-        // printf("Módulo %d: %s\n", module_count, modules[module_count - 1].filename);
-        // printf("  Definições (%d):\n", modules[module_count - 1].def_count);
-        // for (int d = 0; d < modules[module_count - 1].def_count; d++) {
-        //     printf("    %s (rel_addr=%d, %s)\n",
-        //            modules[module_count - 1].defs[d].label,
-        //            modules[module_count - 1].defs[d].rel_addr,
-        //            modules[module_count - 1].defs[d].is_global ? "GLOBAL" : "local");
-        // }
-        // printf("  Externos (%d):\n", modules[module_count - 1].extern_count);
-        // for (int e = 0; e < modules[module_count - 1].extern_count; e++) {
-        //     printf("    %s\n", modules[module_count - 1].externs[e]);
-        // }
     }
     // Construir EXTAB e atribuir CSADDR
     int instr_cur_base = 0;
@@ -240,7 +228,6 @@ bool first_pass_multi(int filecount, const char *filenames[])
         }
         instr_cur_base += modules[i].instr_size;
         data_cur_base += modules[i].data_size;
-        // printf("instr_cur_base: %d, data_cur_base: %d\n", instr_cur_base, data_cur_base);
     }
     // Verificar externos: cada EXTERN deve estar em EXTAB
     for (int i = 0; i < module_count; i++) {
