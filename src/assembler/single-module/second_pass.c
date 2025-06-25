@@ -11,12 +11,9 @@
    PASSAGEM 2:
    - Abre novamente o arquivo fonte
    - Para cada linha, gera números no arquivo objeto (.obj):
-     > Se for pseudo-SPACE: escreve ‘0’ em N posições
-     > Se for pseudo-CONST: escreve o valor da constante em 1 posição
-     > Se for instrução normal: 
-         * converte mnemônico → opcode, 
-         * converte cada operando (label ou número literal) → valor numérico
-         * escreve “opcode op1 op2 op3” (faltando operandos, coloca -1)
+        > Converte mnemônico → opcode, 
+        > Converte cada operando (label ou número literal) → valor numérico
+        > Escreve “opcode op1 op2 op3” (faltando operandos, coloca -1)
    - Usa a tabela de símbolos (construída na passagem 1) para resolver labels.
    -------------------------------------------------------------------------- */
 bool second_pass(const char *src_filename, const char *obj_filename)

@@ -36,13 +36,13 @@ typedef struct {
 	int address; // endereço absoluto no módulo único
 } Symbol;
 
-// Informação de cada módulo quando em multi-module
+// Informações de cada módulo quando em multi-module
 typedef struct {
 	const char *filename; // ponteiro para nome do arquivo-fonte
 	int instr_size; // LOCCTR relativo para instr_mem (número de palavras)
 	int data_size; // LOCCTR relativo para data_mem (número de palavras)
-	int instr_CSADDR; // base atribuída no endereço final
-	int data_CSADDR;
+	int instr_CSADDR; // base atribuída no endereço final ocupado por instruções
+	int data_CSADDR; // base atribuída no endereço final ocupado por dados
 
 	// definições de símbolos locais:
 	int def_count;
@@ -64,7 +64,6 @@ typedef struct {
     int address;  // endereço absoluto final
 } EXTABEntry;
 
-
 // Variáveis para single-module
 extern const InstrDef instr_table[];
 extern const int NUM_INSTR;
@@ -74,7 +73,7 @@ extern int instr_LOCCTR;
 extern int data_LOCCTR;
 
 // Variáveis para multi-module
-extern ModuleInfo modules[];
+extern ModuleInfo modules[]; // array de módulos que será preenchido pela função de primeira passagem
 extern int module_count;
 extern EXTABEntry EXTAB[];
 extern int EXTAB_count;

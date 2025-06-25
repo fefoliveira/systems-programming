@@ -67,6 +67,7 @@ bool second_pass_multi(int filecount, const char *filenames[], const char *out_f
             // Pseudo?
             PseudoType pseudo;
             if (is_pseudo(token, &pseudo)) {
+                // Se for pseudo-instrução, só checa os erros e dá continue
                 if (pseudo == PSEUDO_SPACE) {
                     int n;
                     char *p = ptr + strlen(token);
@@ -131,8 +132,7 @@ bool second_pass_multi(int filecount, const char *filenames[], const char *out_f
                     ptr += strlen(oper);
                     trim(ptr);
                 }
-                fprintf(fp_out, "%d %d %d %d\n", instr_table[opc].opcode,
-                        ops[0], ops[1], ops[2]);
+                fprintf(fp_out, "%d %d %d %d\n", instr_table[opc].opcode, ops[0], ops[1], ops[2]);
             }
         }
         fclose(fp);

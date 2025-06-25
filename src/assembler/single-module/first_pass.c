@@ -35,7 +35,7 @@ bool first_pass(const char *src_filename)
             continue; // linha vazia ou comentário
         }
 
-		// Remover comentários (se houver)
+		// Remover comentários inline (se houver)
         char *comment = strchr(ptr, '#');
         if (comment) {
 				*comment = '\0'; // corta a linha no comentário
@@ -77,8 +77,6 @@ bool first_pass(const char *src_filename)
             fclose(fp);
             return false;
         }
-        printf("token: '%s'\n", token);
-        print_symbol_table();
 
 		// Verifica se o token é pseudo-instr (SPACE, CONST, END)
         PseudoType pseudo;
