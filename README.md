@@ -99,7 +99,7 @@ This will:
 - You can edit `programs/program.txt` (or any other .txt file related to a program, such as an "add.txt") to change the program executed
 - Each line must follow the opcode format from `isa.h`
 - Memory can be preloaded with values by editing `main.c`
-- The "linker" is just another assembler like the sigle-module one, but with the ability to resolve an external symbol table for all the code's labels, and join more than one assembly into one, to later assemble everything together at once
+- The "linker" is just another assembler like the sigle-module one, but with the ability to resolve an external symbol table for all the code's labels, and join more than one assembly into one, to later assemble everything together at once, line by line
 
 ## 📄 License
 
