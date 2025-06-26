@@ -15,22 +15,21 @@ Repository with the project developed during the Systems Programming discipline 
 │   │   ├── assembler.c     # Implementation of the two-pass-assembler (assembler utils functions and main())
 │   │   ├── assembler.h     # Header for "assembler.c", "first_pass.c" and "second_pass.c"
 │   │   ├── single-module
-│   │   │   ├── fist_pass.c     # First-pass function for the two-pass-assembler (single-module assembling)
+│   │   │   ├── first_pass.c    # First-pass function for the two-pass-assembler (single-module assembling)
 │   │   │   └── second_pass.c   # Second-pass function for the two-pass-assembler (single-module assembling)
 │   │   └── multi-module
-│   │       ├── linkter_fist_pass.c   # First-pass function for the linker (multi-module assembling)
+│   │       ├── linker_first_pass.c   # First-pass function for the linker (multi-module assembling)
 │   │       └── linker_second_pass.c  # Second-pass function for the linker (multi-module assembling)
 │   ├── utils
-│   │   ├── utils.c       # Implementation of utils functions (like trim())
-│   │   └── utils.h       # Header for utils.c
+│   │   ├── utils.c     # Implementation of utils functions (like trim())
+│   │   └── utils.h     # Header for utils.c
 │   └── vm
 │       ├── cpu
-│       │   ├──
 │       │   ├── cpu.c       # Implementation of instruction execution logic
 │       │   └── cpu.h       # Header for cpu.c
 │       ├── loader
 │       │   ├── loader.c    # Loads a text-based instruction file into the instruction memory
-│       │   └── loader.h    # Header loader.c
+│       │   └── loader.h    # Header for loader.c
 │       ├── memory
 │       │   ├── memory.c    # Defines the instruction and data memory arrays and memory-related functions
 │       │   └── memory.h    # Header for memory module (registers, PC, function declarations)
@@ -55,7 +54,7 @@ make assemble program
 
 This will:
 
-- Assemble the source code in "program.txt" into a object file `program.obj` (always with the name of the .`txt` file), which will be be created in the same directory `/programs`.
+- Assemble the source code in "program.txt" into a object file `program.obj` (always with the name of the `.txt` file), which will be be created in the same directory `/programs`.
 
 Once the object file is assembled, run:
 
