@@ -108,8 +108,7 @@ bool second_pass_multi(int filecount, const char *filenames[], const char *out_f
                 for (int j = 0; j < nargs; j++) {
                     char oper[MAX_TOKEN_LEN];
                     if (sscanf(ptr, "%s", oper) != 1) {
-                        fprintf(stderr, "Erro %s: faltou operando %d em \"%s\".\n",
-                                mod->filename, j + 1, token);
+                        fprintf(stderr, "Erro %s: faltou operando %d em \"%s\".\n", mod->filename, j + 1, token);
                         fclose(fp);
                         fclose(fp_out);
                         return false;
@@ -118,11 +117,10 @@ bool second_pass_multi(int filecount, const char *filenames[], const char *out_f
                         (oper[0] == '-' && isdigit((unsigned char)oper[1]))) {
                         ops[j] = atoi(oper);
                     } else {
-                        // buscar em EXTAB (symbols globais e locais já registrados)
+                        // É label: buscar em EXTAB (símbolos globais e locais já registrados)
                         int abs_addr = EXTAB_lookup(oper);
                         if (abs_addr < 0) {
-                            fprintf(stderr, "Erro %s: símbolo \"%s\" não definido.\n",
-                                    mod->filename, oper);
+                            fprintf(stderr, "Erro %s: símbolo \"%s\" não definido.\n", mod->filename, oper);
                             fclose(fp);
                             fclose(fp_out);
                             return false;
