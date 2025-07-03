@@ -6,7 +6,7 @@ EXTERN  fim
 #
 in4:    SPACE   1
 sub:    MV      1       in1
-        MV      2       in3
+        MV      2       in2
         SUB     3       1       2
         ST      in4     3
         W       in4
