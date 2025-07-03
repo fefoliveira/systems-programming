@@ -2,11 +2,11 @@ GLOBAL  in3
 GLOBAL  add
 EXTERN  in1
 EXTERN  in2
-EXTERN  fim                     # "sub" ao inves de "fim" para usar mod3
+EXTERN  fim                     # para linkar mod1, mod2 e mod3, substituir por "sub" ao inves de "fim"
 #
 in3:    SPACE   1
-add:    MV      1   in1
-        MV      2   in2
-        ADD     3   1   2 
-        ST      in3 3
-        JMP     fim             # "sub" ao inves de "fim" para usar mod3
+add:    MV      1       in1
+        MV      2       in2
+        ADD     3       1   2 
+        ST      in3     3
+        JMP     fim             # para linkar mod1, mod2 e mod3, substituir por "sub" ao inves de "fim"
