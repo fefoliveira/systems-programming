@@ -31,6 +31,7 @@ bool second_pass_multi(int filecount, const char *filenames[], const char *out_f
             return false;
         }
         int line_num = 0;
+        int local_data_loc = 0; // rastreia deslocamento local de dados para CONST
         while (fgets(line_buffer, sizeof(line_buffer), fp) != NULL) {
             line_num++;
             char *ptr = line_buffer;
@@ -78,6 +79,7 @@ bool second_pass_multi(int filecount, const char *filenames[], const char *out_f
                         fclose(fp_out);
                         return false;
                     }
+                    local_data_loc += n;
                 } else if (pseudo == PSEUDO_CONST) {
                     int k;
                     char *p = ptr + strlen(token);
@@ -88,6 +90,15 @@ bool second_pass_multi(int filecount, const char *filenames[], const char *out_f
                         fclose(fp_out);
                         return false;
                     }
+                    int abs_data_idx = mod->data_CSADDR + local_data_loc;
+                    if (abs_data_idx < 0 || abs_data_idx >= 50) {
+                        fprintf(stderr, "Erro %s: CONST ultrapassa o limite da memória de dados.\n", mod->filename);
+                        fclose(fp);
+                        fclose(fp_out);
+                        return false;
+                    }
+                    fprintf(fp_out, "d %d %d\n", abs_data_idx, k);
+                    local_data_loc++;
                 } else if (pseudo == PSEUDO_END) {
                     break;
                 }

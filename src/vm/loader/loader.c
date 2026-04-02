@@ -21,6 +21,25 @@ bool load_program(const char *filename)
 			continue; // Ignora comentários/linhas vazias
 		}
 
+		// Linha de inicialização de dado: "d <índice> <valor>"
+		if (buffer[0] == 'd' && buffer[1] == ' ') {
+			int idx, val;
+			if (sscanf(buffer + 2, "%d %d", &idx, &val) == 2) {
+				int abs_idx = DATA_MEMORY_START + idx;
+				if (abs_idx >= DATA_MEMORY_START && abs_idx < MEMORY_SIZE) {
+					memory[abs_idx].data = val;
+				} else {
+					fprintf(stderr,
+						"Erro na linha %d: índice de dado %d fora dos limites.\n",
+						line + 1, idx);
+					fclose(file);
+					return 1;
+				}
+			}
+			line++;
+			continue;
+		}
+
 		int count = sscanf(buffer, "%d %d %d %d", &opcode, &op1, &op2,
 				   &op3);
 

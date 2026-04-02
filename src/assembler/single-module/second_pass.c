@@ -33,6 +33,7 @@ bool second_pass(const char *src_filename, const char *obj_filename)
 	char line[MAX_LINE_LEN];
     int line_num = 0;
     int loc = 0; // endereço corrente para escrever no arquivo objeto
+    int data_loc = 0; // rastreia deslocamento atual na memória de dados
 
 	while (fgets(line, sizeof(line), fp_src) != NULL) {
         line_num++;
@@ -67,6 +68,26 @@ bool second_pass(const char *src_filename, const char *obj_filename)
 		// Verifica se o token é pseudo-instrução
         PseudoType pseudo;
         if (is_pseudo(token, &pseudo)) {
+            if (pseudo == PSEUDO_SPACE) {
+                int n;
+                char *p = ptr + strlen(token);
+                trim(p);
+                sscanf(p, "%d", &n); // já validado na primeira passagem
+                data_loc += n;
+            } else if (pseudo == PSEUDO_CONST) {
+                int k;
+                char *p = ptr + strlen(token);
+                trim(p);
+                sscanf(p, "%d", &k); // já validado na primeira passagem
+                if (data_loc < 0 || data_loc >= 50) {
+                    fprintf(stderr, "Linha %d: CONST ultrapassa o limite da memória de dados.\n", line_num);
+                    fclose(fp_src);
+                    fclose(fp_obj);
+                    return false;
+                }
+                fprintf(fp_obj, "d %d %d\n", data_loc, k);
+                data_loc++;
+            }
             continue;
         } else {
 			// É uma instrução normal

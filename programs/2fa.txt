@@ -1,0 +1,36 @@
+# Autenticação de Dois Fatores (2FA)
+# ---------------------------------------------------------------------------
+# ATENÇÃO: programa de demonstração educacional.
+# Os valores secretos são armazenados como constantes visíveis no código-fonte
+# apenas para fins didáticos — nunca faça isso em sistemas reais.
+#
+# Primeiro fator:  PIN numérico (algo que o usuário sabe)
+# Segundo fator:   OTP — código de uso único (algo que o usuário possui)
+#
+# PIN secreto:  1234
+# OTP secreto:  5678
+#
+# Saída: 1 = acesso permitido | 0 = acesso negado
+# ---------------------------------------------------------------------------
+pin_input:      SPACE   1               # entrada do usuário: PIN
+otp_input:      SPACE   1               # entrada do usuário: OTP
+secret_pin:     CONST   1234            # PIN secreto armazenado
+secret_otp:     CONST   5678            # OTP secreto armazenado
+acesso_ok:      CONST   1               # código de saída: acesso permitido
+acesso_neg:     CONST   0               # código de saída: acesso negado
+                R       pin_input       # lê o PIN do usuário
+                R       otp_input       # lê o OTP do usuário
+                MV      0   pin_input   # a0 = pin_input
+                MV      1   secret_pin  # a1 = secret_pin (1234)
+                JEQ     0   1   check_otp   # se PIN correto, verifica OTP
+                W       acesso_neg      # PIN incorreto → acesso negado
+                STP
+check_otp:      MV      2   otp_input   # a2 = otp_input
+                MV      3   secret_otp  # a3 = secret_otp (5678)
+                JEQ     2   3   grant   # se OTP correto, concede acesso
+                W       acesso_neg      # OTP incorreto → acesso negado
+                STP
+grant:          W       acesso_ok       # ambos corretos → acesso permitido
+                STP
+                END
+# ---------------------------------------------------------------------------
